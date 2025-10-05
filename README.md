@@ -52,6 +52,45 @@ MediCore is an AI-powered platform designed to provide real-time diagnostic assi
     npm run dev
     ```
 
+
+## Docker Setup
+This project uses Docker Compose for a consistent development environment.
+
+### Prerequisites
+- Docker Desktop 4.0+
+- docker-compose 2.0+
+
+### Running with Docker
+1.  **Copy the environment file:** `cp .env.example .env` (and fill in your secrets).
+2.  **Build and start all services:**
+    ```bash
+    docker-compose up -d --build
+    ```
+3.  **View logs:**
+    ```bash
+    docker-compose logs -f backend
+    ```
+4.  **Stop services:**
+    ```bash
+    docker-compose down
+    ```
+5.  **Access the container shell:**
+    ```bash
+    docker-compose exec backend bash
+    ```
+
+
+
+
+## API Access & Documentation
+The API is served at `http://localhost:8000`. You can access the health check endpoint to verify it's running:
+```bash
+curl http://localhost:8000/health
+```
+
+For detailed information on all available endpoints, authentication, and request/response formats, please see the **[API Documentation](https://www.google.com/search?q=./docs/api/api-overview.md)**.
+
+
 ## Project Structure
 *(A brief overview of the directory structure will be added here later)*
 
@@ -60,3 +99,32 @@ Contributions are welcome. Please follow the standard fork, branch, and pull req
 
 ## License
 This project is licensed under the MIT License.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

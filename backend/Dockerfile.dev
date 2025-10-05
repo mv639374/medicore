@@ -1,0 +1,21 @@
+# What: A development-focused Dockerfile. It installs all development dependencies and is configured to work with a mounted volume for hot-reloading.
+# Why: This setup allows us to make code changes on our local machine, and they will be instantly reflected inside the running container without needing to rebuild the image. This speeds up development significantly.
+
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install system dependencies (e.g., postgreql-client for pg_isready)
+RUN apt-get update && apt-get install -y postgresql-client
+
+COPY requirements/ ./requirements/
+RUN pip install --no-cache-dir -r requirements/development.txt
+
+# copy the entire backend directory
+COPY ../. .
+
+# Expose the port the app runs on
+EXPOSE 8000
+
+# The default command will be the overridden in docker-compose, but this is a good default.
+CMD ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]

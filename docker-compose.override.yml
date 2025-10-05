@@ -1,0 +1,14 @@
+# What & Why: This file allows us to add or override settings from docker-compose.yml specifically for development without modifying the base file. Here, we set a debug flag and change the command to enable more verbose logging. Docker Compose automatically merges this file with the main one.
+
+version: '3.8'
+
+services:
+  backend:
+    environment:
+      - ENVIRONMENT=development
+    command: uvicorn backend.app.main:app --reload --host 0.0.0.0 --port 8000 --log-level debug
+  
+  # postgres:
+  # # This allows connecting to the DB from the host without a password, for dev convenience.
+  #   environment:
+  #     - POSTGRES_HOST_AUTH_METHOD=trust

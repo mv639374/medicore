@@ -34,8 +34,17 @@ class Settings(BaseSettings):
     # Application Enviroment
     ENVIRONMENT: str = "development"
 
+    # CORS configuration
+    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    CORS_ALLOW_CREDENTIALS: bool = True
+
+    # API configuration
+    API_V1_PERFIX: str = "/api/v1"
+    OPENAPI_URL: str = "/api/v1/openapi.json"
+
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 # Create single instance
 settings = Settings()
