@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.Python
+env/
+venv/
+.env
+
+# Node
+node_modules/
+.next/
+out/
+build/
+
+# Docker
+.dockerignore
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ML Models
+*.h5
+*.pkl
+
+# Logs
+*.log
+
+# Other
+aws.txt
+directory.txt
+whiteboard.ipynb
