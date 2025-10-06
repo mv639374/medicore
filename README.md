@@ -53,6 +53,31 @@ MediCore is an AI-powered platform designed to provide real-time diagnostic assi
     ```
 
 
+## Security Features
+This project implements several security best practices:
+- **Authentication:** JWT-based authentication for securing API endpoints.
+- **Authorization:** Role-Based Access Control (RBAC) to restrict access based on user roles.
+- **Data Encryption:** Field-level encryption for sensitive patient data at rest.
+- **Password Security:** Strong password hashing using bcrypt.
+- **Rate Limiting:** Protection against brute-force and DDoS attacks.
+- **Security Headers:** Standard security headers (CSP, HSTS, etc.) on all responses.
+
+### Generating Security Keys
+You must generate two secret keys and add them to your `.env` file.
+
+1.  **JWT Secret Key:**
+    ```bash
+    openssl rand -hex 32
+    ```
+2.  **Encryption Key:**
+    ```bash
+    # Run this inside the backend container
+    docker-compose exec backend python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+    ```
+    Copy these values into the `JWT_SECRET_KEY` and `ENCRYPTION_KEY` variables in your `.env` file.
+
+
+
 ## Docker Setup
 This project uses Docker Compose for a consistent development environment.
 
@@ -102,29 +127,9 @@ This project is licensed under the MIT License.
 
 
 
+# Tesing
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+1. **tests/unit/test_security.py**
+```bash
+docker-compose exec backend pytest /app/backend/tests/unit/test_security.py -v
+```

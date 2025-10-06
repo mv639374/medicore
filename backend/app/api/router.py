@@ -6,14 +6,16 @@ from fastapi import APIRouter
 # Create the main API router with a prefix for versioning
 api_router = APIRouter(prefix="/api/v1")
 
+
 @api_router.get("/info")
 def get_api_info():
     """Returns basic information about the API."""
     return {
         "status": "ok",
         "api_version": "1.0.0",
-        "message": "Welcome to the MediCore API!"
+        "message": "Welcome to the MediCore API!",
     }
+
 
 # Placeholder comments for future endpoint routers
 # from .v1.endpoints import auth

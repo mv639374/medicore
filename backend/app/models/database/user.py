@@ -4,8 +4,11 @@
 
 import enum
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, Enum
+
+from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String, func
+
 from backend.app.database import Base
+
 
 class UserRole(enum.Enum):
     ADMIN = "admin"
@@ -13,6 +16,7 @@ class UserRole(enum.Enum):
     RADIOLOGIST = "radiologist"
     TECHNICIAN = "technician"
     VIEWER = "viewer"
+
 
 class User(Base):
     __tablename__ = "users"
@@ -25,9 +29,17 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
-    def __repr__(self):
-        return f"<User(id={self.id}, email='{self.email}')>"
+    # columns for security
+    failed_login_attemps = Column(Integer, default=0)
+    account_locked_until = Column(DateTime, nullable=True)
 
-# Note: The password hashing logic will be implemented in the security module.
+    def is_account_locked(self) -> bool:
+        """Checks if the account is currently locked."""
+        return (
+            self.account_locked_until is not None
+            and self.account_locked_until > datetime.utcnow()
+        )

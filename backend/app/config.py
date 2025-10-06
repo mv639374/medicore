@@ -1,11 +1,13 @@
-from pydantic_settings import BaseSettings
 from pydantic import validator
+from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
     """
     Manages application configuration using Pydantic.
     It reads enviroment variables from a .env file.
     """
+
     # Database configuration
     DATABASE_HOST: str
     DATABASE_PORT: int = 5432
@@ -26,6 +28,9 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRATION_MINUTES: int = 30
 
+    # New security settings
+    ENCRYPTION_KEY: str
+
     # AWS Configuration
     AWS_ACCESS_KEY_ID: str
     AWS_SECRET_ACCESS_KEY: str
@@ -33,6 +38,9 @@ class Settings(BaseSettings):
 
     # Application Enviroment
     ENVIRONMENT: str = "development"
+
+    # Rate limiting
+    RATE_LIMIT_ENABLED: bool = True
 
     # CORS configuration
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]
@@ -45,6 +53,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         extra = "ignore"
+
 
 # Create single instance
 settings = Settings()

@@ -1,37 +1,40 @@
 # What: This file will hold our dependency injection functions. These are special functions that FastAPI can run before processing a request. For now, we are creating placeholders for getting the current user and checking their permissions.
 # Why: Dependencies help us write reusable logic (like authentication checks) and keep our endpoint code clean and focused. Instead of writing user-checking code in every endpoint, we can just "depend" on get_current_user.
 
-from fastapi import Depends, HTTPException, status
-from typing import Dict
+from fastapi import Depends
 
-# This is a placeholder. We will implement JWTBearer later.
-# from backend.app.middleware.auth import JWRBearer
-from backend.app.database import get_db
+from backend.app.core.exceptions import ForbiddenException, UnauthorizedException
+from backend.app.core.permissions import Permission, check_permission
+from backend.app.middleware.auth import JWTBearer
+from backend.app.models.database.user import User, UserRole
 
-def get_current_user() -> Dict:
-    """
-    Placeholder dependecy to simulate getting a user from a JWT token.
-    In a real implementation, this will decode the token and fetch the user from the database.
-    """
-    # For now, we return a mock user dictionary.
-    # This will be replaced with actual JWT token decoding logic.
-    mock_user = {"id":1, "email":"test@medicore.com", "role":"admin"}
+
+# Dependency to get the current user from the JWT token
+async def get_current_user(payload: dict = Depends(JWTBearer())) -> User:
+    # In a real app, you'd query the DB here based on payload['sub]
+    # For now, we'll mock a user object.
+    # user = db.query(User).filter(User.email == payload['sub']).first()
+    # if not user: raise UnauthorizedException()
+    mock_user = User(
+        email=payload.get("sub"),
+        role=UserRole(payload.get("role", "viewer")),
+        is_active=True,
+    )
     return mock_user
 
-def require_permission(permission: str):
-    """
-    Dependency to check if the current user has the required permission.
-    This is a basic placeholder for a role-based access control (RBAC) system.
-    """
-    def permission_checker(current_user: Dict = Depends(get_current_user)) -> Dict:
-        # In a real system, we'd check against a user's roles and permissions.
-        # For now, we'll use a simple check on the mock user's role.
-        if "role" not in current_user or current_user["role"] != permission:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You do not have permission to perform this action."
-            )
+
+# Dependency to get a current user who is also active
+def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
+    if not current_user.is_active:
+        raise UnauthorizedException("Inactive user")
+    return current_user
+
+
+# Dependency factory for requiring a specific permission
+def require_permission(permission: Permission):
+    def permission_checker(current_user: User = Depends(get_current_active_user)):
+        if not check_permission(current_user.role, permission):
+            raise ForbiddenException("You do not have the required permission.")
         return current_user
 
     return permission_checker
-

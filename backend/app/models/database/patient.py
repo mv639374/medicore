@@ -4,9 +4,12 @@
 
 import uuid
 from datetime import datetime
+
 from sqlalchemy import Column, DateTime, LargeBinary, String
 from sqlalchemy.dialects.postgresql import UUID
+
 from backend.app.database import Base
+
 
 class Patient(Base):
     __tablename__ = "patients"
@@ -16,9 +19,12 @@ class Patient(Base):
     encrypted_dob = Column(LargeBinary, nullable=False)
     encrypted_ssn = Column(LargeBinary, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
     def __repr__(self):
         return f"<Patient(id='{self.id}')>"
+
 
 # Note: The actual encryption/decryption logic will be added later in the security module.
