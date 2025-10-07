@@ -7,7 +7,7 @@ from ipaddress import ip_address
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 
-from backend.app.database import Base
+from app.database import Base
 
 
 class AuditLog(Base):

@@ -7,8 +7,8 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, LargeBinary, String
 from sqlalchemy.dialects.postgresql import UUID
-
-from backend.app.database import Base
+from sqlalchemy.orm import relationship
+from app.database import Base
 
 
 class Patient(Base):
@@ -22,6 +22,9 @@ class Patient(Base):
     updated_at = Column(
         DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
     )
+
+    # Add the relationship to DICOMStudy
+    studies = relationship("DICOMStudy", back_populates="patient", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Patient(id='{self.id}')>"

@@ -6,17 +6,21 @@ version: '3.8'
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: backend/Dockerfile.dev
     ports:
       - "8000:8000"
     volumes:
-      - .:/app   # Mount local backend code into the container
+      - ./backend:/app
+      - ./data:/app/data
+    environment:
+      - AWS_ENDPOINT_URL=http://localstack:4566
     env_file:
       - .env
     depends_on:
       - postgres
       - redis
+      - localstack
 
 
   postgres:
@@ -38,7 +42,54 @@ services:
     volumes:
       - redis_data:/data
 
+  
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"  # Main gateway port
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/var/lib/localstack
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOST_TMP_FOLDER=/tmp/localstack
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - localstack_data:/var/lib/localstack
+    privileged: true
+
+  
+  celery_worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.dev
+    command: celery -A app.workers.celery_app worker --loglevel=info
+    volumes:
+      - ./backend:/app
+      - ./data:/app/data
+    env_file:
+      - .env
+    depends_on:
+      - backend
+      - redis
+      - postgres
+
+  flower:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.dev
+    command: celery -A app.workers.celery_app flower --port=5555
+    volumes:
+      - ./backend:/app
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
 
 volumes:
   postgres_data:
   redis_data:
+  localstack_data:

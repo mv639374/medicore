@@ -1,0 +1,9 @@
+Metadata-Version: 2.4
+Name: medicore
+Version: 0.1.0
+Summary: Medicore API
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-cov; extra == "dev"

@@ -1,5 +1,6 @@
 from pydantic import validator
 from pydantic_settings import BaseSettings
+from typing import Optional
 
 
 class Settings(BaseSettings):
@@ -34,7 +35,13 @@ class Settings(BaseSettings):
     # AWS Configuration
     AWS_ACCESS_KEY_ID: str
     AWS_SECRET_ACCESS_KEY: str
+    AWS_REGION: str = "ap-south-1"
     AWS_BUCKET_NAME: str
+    AWS_ENDPOINT_URL: Optional[str] = None # For LocalStack
+
+    # DICOM Processing Configuration
+    DICOM_TEMP_DIR: str = "/tmp/dicom"
+    DICOM_SUPPORTED_MODALITIES: list[str] = ["CT", "MR", "CR", "DX", "MG", "US"]
 
     # Application Enviroment
     ENVIRONMENT: str = "development"
@@ -49,6 +56,15 @@ class Settings(BaseSettings):
     # API configuration
     API_V1_PERFIX: str = "/api/v1"
     OPENAPI_URL: str = "/api/v1/openapi.json"
+
+    # Celery Configuration
+    @property
+    def CELERY_BROKER_URL(self) -> str:
+        return self.REDIS_URL
+
+    @property
+    def CELERY_RESULT_BACKEND(self) -> str:
+        return self.REDIS_URL
 
     class Config:
         env_file = ".env"

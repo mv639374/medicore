@@ -3,19 +3,43 @@
 
 FROM python:3.9-slim
 
+# WORKDIR /app
+
+# # Install system dependencies (e.g., postgreql-client for pg_isready)
+# RUN apt-get update && apt-get install -y postgresql-client awscli
+
+# COPY backend/requirements/ ./requirements/
+# RUN pip install --no-cache-dir -r requirements/development.txt
+
+# # copy the entire backend directory
+# COPY backend/ .
+
+# # Expose the port the app runs on
+# EXPOSE 8000
+
+# # The default command will be the overridden in docker-compose, but this is a good default.
+# CMD ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+
+
+
+
+FROM python:3.9-slim
+
 WORKDIR /app
 
-# Install system dependencies (e.g., postgreql-client for pg_isready)
-RUN apt-get update && apt-get install -y postgresql-client
+# Install system dependencies
+RUN apt-get update && apt-get install -y postgresql-client awscli
 
-COPY requirements/ ./requirements/
+# Copy requirements first to leverage Docker cache
+COPY backend/requirements/ ./requirements/
 RUN pip install --no-cache-dir -r requirements/development.txt
 
-# copy the entire backend directory
-COPY ../. .
+# Correctly copy the application code from the 'backend' directory
+# in the build context into the WORKDIR (/app) in the container.
+COPY backend/ .
 
 # Expose the port the app runs on
 EXPOSE 8000
 
-# The default command will be the overridden in docker-compose, but this is a good default.
+# The default command will be overridden in docker-compose, but this is a good default.
 CMD ["uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]

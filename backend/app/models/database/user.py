@@ -7,7 +7,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String, func
 
-from backend.app.database import Base
+from app.database import Base
 
 
 class UserRole(enum.Enum):

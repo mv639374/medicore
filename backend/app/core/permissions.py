@@ -4,11 +4,11 @@
 
 from enum import Enum
 
-from backend.app.models.database.user import UserRole
+from app.models.database.user import UserRole
 
 
 class Permission(Enum):
-    READ_DIAGNOSITICS = "read_diagnostics"
+    READ_DIAGNOSTICS = "read_diagnostics"
     CREATE_DIAGNOSTICS = "create_diagnostics"
     UPDATE_DIAGNOSTICS = "update_diagnostics"
     DELETE_DIAGNOSTICS = "delete_diagnostics"
@@ -21,20 +21,20 @@ class Permission(Enum):
 role_permissions = {
     UserRole.ADMIN: [p for p in Permission],  # Admin has all permissions
     UserRole.DOCTOR: [
-        Permission.READ_DIAGNOSITICS,
+        Permission.READ_DIAGNOSTICS,
         Permission.CREATE_DIAGNOSTICS,
         Permission.UPDATE_DIAGNOSTICS,
         Permission.VIEW_ANALYTICS,
     ],
     UserRole.RADIOLOGIST: [
-        Permission.READ_DIAGNOSITICS,
+        Permission.READ_DIAGNOSTICS,
         Permission.CREATE_DIAGNOSTICS,
         Permission.UPDATE_DIAGNOSTICS,
     ],
     UserRole.TECHNICIAN: [
         Permission.CREATE_DIAGNOSTICS,
     ],
-    UserRole.VIEWER: [Permission.READ_DIAGNOSITICS],
+    UserRole.VIEWER: [Permission.READ_DIAGNOSTICS],
 }
 
 

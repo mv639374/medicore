@@ -2,11 +2,11 @@
 # Why: Dependencies help us write reusable logic (like authentication checks) and keep our endpoint code clean and focused. Instead of writing user-checking code in every endpoint, we can just "depend" on get_current_user.
 
 from fastapi import Depends
-
-from backend.app.core.exceptions import ForbiddenException, UnauthorizedException
-from backend.app.core.permissions import Permission, check_permission
-from backend.app.middleware.auth import JWTBearer
-from backend.app.models.database.user import User, UserRole
+from app.database import get_db
+from app.core.exceptions import ForbiddenException, UnauthorizedException
+from app.core.permissions import Permission, check_permission
+from app.middleware.auth import JWTBearer
+from app.models.database.user import User, UserRole
 
 
 # Dependency to get the current user from the JWT token

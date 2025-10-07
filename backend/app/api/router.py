@@ -2,10 +2,13 @@
 # Why: As our application grows, we'll have many endpoints (for users, patients, diagnostics, etc.). This main router acts as the entry point, and we will attach all the other specific routers to it. This keeps our code organized.
 
 from fastapi import APIRouter
+from app.api.v1.endpoints import studies # Import the new router
 
 # Create the main API router with a prefix for versioning
-api_router = APIRouter(prefix="/api/v1")
+api_router = APIRouter()
 
+# Include the studies router
+api_router.include_router(studies.router, prefix="/studies", tags=["Studies"])
 
 @api_router.get("/info")
 def get_api_info():

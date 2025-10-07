@@ -4,17 +4,21 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from backend.app.api.router import api_router
-from backend.app.config import settings
-from backend.app.core.exceptions import (
+# CORRECTED IMPORTS: Removed 'backend.' prefix
+from app.api.router import api_router
+from app.config import settings
+from app.core.exceptions import (
     BadRequestException,
     ForbiddenException,
     NotFoundException,
     UnauthorizedException,
 )
-from backend.app.middleware.cors import configure_cors
-from backend.app.middleware.logging import LoggingMiddleware
-from backend.app.middleware.rate_limiting import configure_rate_limiting, limiter
+from app.middleware.cors import configure_cors
+from app.middleware.logging import LoggingMiddleware
+from app.middleware.rate_limiting import configure_rate_limiting, limiter
+from app.dependencies import require_permission
+from app.core.permissions import Permission
+from fastapi import Depends
 
 app = FastAPI(
     title="Medicore API",
@@ -91,6 +95,4 @@ async def health_check(request: Request):
 
 
 # Include the main API router
-app.include_router(api_router)
-
-# Will come back to this file later to add middleware, routes, etc.
+app.include_router(api_router, prefix="/api/v1")

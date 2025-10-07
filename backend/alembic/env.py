@@ -10,7 +10,8 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 # Add the parent directory to the Python path so we can import backend
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+# sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 # this is alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,10 +23,12 @@ fileConfig(config.config_file_name)
 
 # Import your models here so that they are available to Alembic
 # for autogeneration of migrations.
-from backend.app.database import Base
-from backend.app.models.database.audit import AuditLog
-from backend.app.models.database.patient import Patient
-from backend.app.models.database.user import User
+from app.database import Base
+from app.config import settings
+from app.models.database.audit import AuditLog
+from app.models.database.patient import Patient
+from app.models.database.user import User
+from app.models.database.study import DICOMStudy
 
 target_metadata = Base.metadata
 
@@ -39,7 +42,6 @@ def run_migrations_offline():
     here emit the given string to the string to the script output.
     """
 
-    from backend.app.config import settings
 
     url = settings.DATABASE_URL
     context.configure(
@@ -57,7 +59,7 @@ def run_migrations_online():
     In this scenario we need to create an Engine
     and associate a connection with the context.
     """
-    from backend.app.database import engine
+    from app.database import engine
 
     with engine.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)

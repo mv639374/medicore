@@ -6,7 +6,11 @@
 
 # We will come back to this file later to import our models.
 # This makes them easily accessible for Alembic autodiscovery.
+# Why: Making our new DICOMStudy model discoverable by Alembic for migrations.
 
-# from .patient import Patient
-# from .user import User
-# from .audit import AuditLog
+from .patient import Patient
+from .user import User
+from .audit import AuditLog
+from .study import DICOMStudy
+
+__all__ = ["Patient", "User", "AuditLog", "DICOMStudy"]

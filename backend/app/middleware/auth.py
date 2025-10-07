@@ -6,8 +6,8 @@ from typing import Optional
 from fastapi import Request
 from fastapi.security import HTTPBearer
 
-from backend.app.core.exceptions import UnauthorizedException
-from backend.app.core.security import decode_token
+from app.core.exceptions import UnauthorizedException
+from app.core.security import decode_token
 
 
 class JWTBearer(HTTPBearer):
